@@ -1,8 +1,8 @@
 const path = require("path");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
-const fs = require("fs");
 const textract = require("textract");
+const os = require("os");
 
 let win;
 
@@ -51,11 +51,16 @@ app.on("activate", () => {
 });
 
 ipcMain.on("toMain", (event, args) => {
+  console.log(os.platform(), "called here");
+
   textract.fromFileWithPath(
     args,
     { preserveLineBreaks: true },
     function (error, text) {
-      win.webContents.send("fromMain", text);
+      win.webContents.send("fromMain", {
+        isWin: os.platform() === "win32",
+        text,
+      });
     }
   );
   // fs.readFile(args, (error, data) => {

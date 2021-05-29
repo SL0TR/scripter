@@ -1,10 +1,10 @@
 import "./App.css";
-import DragNDropper from "./components/DragNDropper";
+import Scripter from "./components/Scripter";
 
 function App() {
   return (
     <div className="App">
-      <DragNDropper />
+      <Scripter />
     </div>
   );
 }

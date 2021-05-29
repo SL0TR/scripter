@@ -1,30 +1,49 @@
-export function processTextContent(textContent, characterList) {
-  const textArray = textContent.split(" ");
+export function processTextContent({ textContent, characterList, isWin }) {
+  const newLine = isWin ? "\r\n" : "\n";
+  const textArray = textContent.split(newLine);
+
+  console.log(textArray);
+
   const script = {};
+  let id = 0;
+  let dialouge = "";
+  let characterName = null;
 
-  for (const [index, elem] of textArray.entries()) {
-    const characterName = getCharacterName(elem);
+  for (let i = 0; i <= textArray.length; i++) {
+    const charString = textArray[i];
 
-    // const dialouge = getDialogue();
+    // eslint-disable-next-line no-loop-func
+    characterList.forEach((el) => {
+      if (charString && charString.toLowerCase() === el.toLowerCase()) {
+        characterName = el;
+      }
+    });
 
     if (characterName) {
-      script[index.toString()] = {
+      dialouge = "";
+      id += 1;
+
+      script[id.toString()] = {
         characterName,
-        // dialouge
+        dialouge,
       };
+      characterName = null;
+      continue;
+    }
+
+    if (!characterName) {
+      dialouge += charString;
+
+      if (
+        script[id.toString()] &&
+        script[id.toString()].dialouge !== undefined
+      ) {
+        script[id.toString()].dialouge = dialouge;
+      }
+
+      characterName = null;
     }
   }
 
   return script;
 }
-
-function getCharacterName(charString) {
-  let count = charString.match(/\n/g)?.length || 0;
-  let name = null;
-  if (count > 2) {
-    name = charString.split("\n")[1];
-  }
-  return name;
-}
-
-function getDialogue() {}
