@@ -1,36 +1,44 @@
-import React, { useCallback, useState } from "react";
+import React, { useRef, useState } from "react";
 import CharacterList from "./CharacterList";
-import DragNDropper from "./DragNDropper";
 
 function Scripter() {
   const [characterList, setCharacterList] = useState([]);
   const [textContent, setTextContent] = useState("");
-  const [isWin, setIsWin] = useState(false);
+  const textAreaRef = useRef(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const filepath = acceptedFiles?.[0]?.path;
-    window.api.send("toMain", filepath);
-
-    window.api.receive("fromMain", ({ text, isWin }) => {
-      setTextContent(text);
-      setIsWin(isWin);
-    });
-
-    // Do something with the files
-  }, []);
+  const onSubmit = () => {
+    const txt = textAreaRef?.current?.value;
+    if (txt) {
+      setTextContent(txt);
+    }
+  };
 
   return (
     <>
-      {textContent.length > 0 ? (
+      {textContent ? (
         <CharacterList
           textContent={textContent}
           setTextContent={setTextContent}
           list={characterList}
           setList={setCharacterList}
-          isWin={isWin}
+          // isWin={isWin}
         />
       ) : (
-        <DragNDropper onDrop={onDrop} />
+        <div className="container-fluid px-5 mt-5">
+          <div className="form-floating">
+            <textarea
+              ref={textAreaRef}
+              className="form-control"
+              placeholder="Leave a comment here"
+              style={{ height: "300px" }}
+              id="floatingTextarea2"
+            ></textarea>
+            <label for="floatingTextarea2">Script text</label>
+            <button onClick={onSubmit} className="btn btn-primary mt-5">
+              Next
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

@@ -1,5 +1,9 @@
 {
   "name": "script-builder",
+  "author": "Mohaimin Islam",
+  "appId": "com.script-builder",
+  "description": "Drag and drop script and get scripter, son",
+  "homepage": "https://SL0TR.github.io/scripter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,8 +12,11 @@
     "@testing-library/user-event": "^12.1.10",
     "cross-env": "^7.0.3",
     "docx": "^6.0.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.3.5",
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security",
+    "node-stream-zip": "^1.13.4",
     "prettier": "^2.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -20,12 +27,16 @@
   },
   "main": "public/electron.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "deploy": "yarn react-build && gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "dev": "concurrently -k \"cross-env BROWSER=none yarn react-start\" \"yarn electron\"",
+    "electron": "wait-on tcp:3000 && electron .",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build"
   },
   "eslintConfig": {
     "extends": [
@@ -48,7 +59,8 @@
   "devDependencies": {
     "concurrently": "^6.2.0",
     "electron": "^13.0.1",
-    "electron-is-dev": "^2.0.0",
+    "electron-builder": "^22.10.5",
+    "gh-pages": "^3.2.0",
     "wait-on": "^5.3.0"
   }
 }

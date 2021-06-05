@@ -1,9 +1,10 @@
 const path = require("path");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
-const textract = require("textract");
-const os = require("os");
-
+// const textract = require("textract");
+// const os = require("os");
+const log = require("electron-log");
+var filereader = require("./filereader");
 let win;
 
 function createWindow() {
@@ -50,22 +51,33 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("toMain", (event, args) => {
-  console.log(os.platform(), "called here");
+ipcMain.on("toMain", (event, filepath) => {
+  try {
+    // textract.fromFileWithPath(
+    //   filepath,
+    //   { preserveLineBreaks: true },
+    //   function (error, text) {
+    //     if (error) {
+    //       log.error(error);
+    //       return;
+    //     }
+    //     win.webContents.send("fromMain", {
+    //       oSPlatform: os.platform(),
+    //       text,
+    //     });
+    //   }
+    // );
 
-  textract.fromFileWithPath(
-    args,
-    { preserveLineBreaks: true },
-    function (error, text) {
-      win.webContents.send("fromMain", {
-        isWin: os.platform() === "win32",
-        text,
-      });
-    }
-  );
-  // fs.readFile(args, (error, data) => {
-  //   // Do something with file contents
+    filereader.extract(filepath).then(function (res, err) {
+      if (err) {
+        log.error(err);
+        console.log(err);
+      }
 
-  //   win.webContents.send("fromMain", data);
-  // });
+      log.info(res);
+    });
+  } catch (e) {
+    console.log(e, "on error catch");
+    log.error(e, "on error catch");
+  }
 });
