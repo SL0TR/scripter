@@ -43,16 +43,16 @@ export function tableGenerator(script) {
         tableHeader: true,
         children: [
           new TableCell({
-            children: [new Paragraph("Timelog")],
+            children: [new Paragraph("সময়")],
           }),
           new TableCell({
-            children: [new Paragraph("Character Name")],
+            children: [new Paragraph("চরিত্র")],
           }),
           new TableCell({
-            children: [new Paragraph("Dialouge")],
+            children: [new Paragraph("ইংরেজি সংলাপ")],
           }),
           new TableCell({
-            children: [new Paragraph("Bangla")],
+            children: [new Paragraph("বাংলা সংলাপ")],
           }),
         ],
       }),
